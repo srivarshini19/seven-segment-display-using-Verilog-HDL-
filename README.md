@@ -41,49 +41,63 @@ To design and simulate a seven-segment display driver using Verilog HDL, and ver
 ## Verilog Code for Seven-Segment Display  
 
 ```verilog
-// seven_segment_display.v
-module seven_segment_display (
-    input wire [3:0] binary_input,
-    output reg [6:0] seg_output
+module BCD_TO_7SEG (
+    input  wire [3:0] binary_input,
+    output reg  [6:0] seg_output
 );
-
-always @(*) begin
-    case (binary_input)
-        
-        
-        default: seg_output = 7'b0000000; // blank or error
-    endcase
-end
-
+    always @(*) begin
+        case (binary_input)
+            4'd0: seg_output = 7'b1111110;
+            4'd1: seg_output = 7'b0110000;
+            4'd2: seg_output = 7'b1101101;
+            4'd3: seg_output = 7'b1111001;
+            4'd4: seg_output = 7'b0110011;
+            4'd5: seg_output = 7'b1011011;
+            4'd6: seg_output = 7'b1011111;
+            4'd7: seg_output = 7'b1110000;
+            4'd8: seg_output = 7'b1111111;
+            4'd9: seg_output = 7'b1111011;
+            default: seg_output = 7'b0000000;
+        endcase
+    end
 endmodule
+
 ```
 ## Testbench for Seven-Segment Display
 ```verilog
-
 `timescale 1ns / 1ps
-module seven_segment_display_tb;
-// Inputs
-reg [3:0] binary_input;
-// Outputs
-wire [6:0] seg_output;
-// Instantiate the Unit Under Test (UUT)
-seven_segment_display uut (
-    .binary_input(binary_input),
-    .seg_output(seg_output)
-);
-// Test procedure
-initial begin
-    // Initialize inputs
-    binary_input = 4'b0000;
+module BCD_TO_7SEG_tb;
+    reg [3:0] binary_input;
+    wire [6:0] seg_output;
 
-end
+    BCD_TO_7SEG uut (
+        .binary_input(binary_input),
+        .seg_output(seg_output)
+    );
 
+    initial begin
+        binary_input = 4'd0;
+        #10 binary_input = 4'd1;
+        #10 binary_input = 4'd2;
+        #10 binary_input = 4'd3;
+        #10 binary_input = 4'd4;
+        #10 binary_input = 4'd5;
+        #10 binary_input = 4'd6;
+        #10 binary_input = 4'd7;
+        #10 binary_input = 4'd8;
+        #10 binary_input = 4'd9;
+        #10 $stop;
+    end
 
+    initial begin
+        $monitor("Time=%0t | binary_input=%b | seg_output=%b",
+                 $time, binary_input, seg_output);
+    end
 endmodule
 ```
 ## Simulated Output
 
-_____ Keep Simulated output ___________
+<img width="1446" height="805" alt="EXP 2" src="https://github.com/user-attachments/assets/42e5d078-b140-4710-8762-230cd801c781" />
 
 ---
 
